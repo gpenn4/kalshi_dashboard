@@ -25,10 +25,10 @@ jobs:
 
       - name: Write Google service account key
         run: |
-          echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > data/service_account.json
+          echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > service_account.json
 
       - name: Run refresh script
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: data/service_account.json
+          GOOGLE_APPLICATION_CREDENTIALS: service_account.json
         run: |
           python main.py
