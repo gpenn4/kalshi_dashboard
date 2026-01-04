@@ -7,6 +7,7 @@ from google.oauth2.service_account import Credentials
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
+
 def get_data_from_api(url: str, limit: int = 200) -> pd.DataFrame:
     """
     Fetch data from the given API endpoint and return it as a pandas DataFrame.
@@ -202,11 +203,14 @@ def add_spread_col(df: pd.DataFrame) -> pd.DataFrame:
 
     df["midprice_m1"] = (df["yes_bid_m1"] + df["no_bid_m1"]) / 2
 
-    df["Liquidity_Rating"] = np.where(df['yes_spread_m1'] <= 0.02, 'High', 'Low')
+    df["Liquidity_Rating"] = np.where(df["yes_spread_m1"] <= 0.02, "High", "Low")
 
     return df
 
-def write_to_google_sheet(df: pd.DataFrame, worksheet_key: str, worksheet_name: str, credentials_path: str):
+
+def write_to_google_sheet(
+    df: pd.DataFrame, worksheet_key: str, worksheet_name: str, credentials_path: str
+):
     """
     Write the DataFrame to a Google Sheet.
 
@@ -221,9 +225,7 @@ def write_to_google_sheet(df: pd.DataFrame, worksheet_key: str, worksheet_name: 
         "https://www.googleapis.com/auth/drive",
     ]
 
-    credentials = Credentials.from_service_account_file(
-        credentials_path, scopes=scopes
-    )
+    credentials = Credentials.from_service_account_file(credentials_path, scopes=scopes)
 
     gc = gspread.authorize(credentials)
 
@@ -234,5 +236,10 @@ def write_to_google_sheet(df: pd.DataFrame, worksheet_key: str, worksheet_name: 
     worksheet = gs.worksheet(worksheet_name)
 
     worksheet.clear()
-    set_with_dataframe(worksheet=worksheet, dataframe=df, include_index=False,
-                       include_column_header=True, resize=True)
+    set_with_dataframe(
+        worksheet=worksheet,
+        dataframe=df,
+        include_index=False,
+        include_column_header=True,
+        resize=True,
+    )
